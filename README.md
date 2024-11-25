@@ -1,2 +1,2 @@
 # fuzzy-commerce-site
-A fun project to flex my Django skills! 🚀 This e-commerce app showcases key features like product listing, user authentication, shopping cart, and checkout functionality. Built with Python and Django, it's a hands-on way to explore web development concepts while having fun! 💻🐍
+Flexing my Django muscles with this fun e-commerce project! 🚀 A fully-functional online store built with Django to showcase the power of Python and web development. This project is a playground for experimenting with features like product management, user authentication, cart and checkout functionality, and more. Perfect for learning, improving, and having fun with Django! 🐍✨
