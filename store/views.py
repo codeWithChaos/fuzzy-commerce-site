@@ -3,6 +3,10 @@ from .models import Product
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.models import User
+from .forms import SignUpForm
+from django.contrib.auth.forms import UserCreationForm
+from django import forms
 
 
 @login_required(login_url='/login/')
@@ -33,5 +37,24 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    messages.success(request, 'You have been logged out. Thanks for stopping by! :D')
+    messages.success(request, 'You have been logged out. Thanks for stopping by! 😊')
     return redirect('login')
+
+def register(request):
+    form = SignUpForm()
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            # log in user
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            messages.success(request, 'You have successfully registered!')
+            return redirect('home')
+        else:
+            messages.error(request, 'An error occurred during registration.')
+            return redirect('register')
+    else:
+        return render(request, 'store/register.html', {'form': form})

@@ -1,0 +1,29 @@
+{% extends 'store/_base.html' %} 
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<header class="bg-dark py-5">
+  <div class="container px-4 px-lg-5 my-5">
+    <div class="text-center text-white">
+      <h1 class="display-4 fw-bolder">Register</h1>
+      <p class="lead fw-normal text-white-50 mb-0">
+        Register to start shopping!!!
+      </p>
+    </div>
+  </div>
+</header>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-6 offset-md-3 mb-5">
+      <form
+        method="post"
+        action="{% url 'register' %}"
+        class="shadow p-3 mb-5 bg-body rounded">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-outline-secondary mt-3">Register</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
