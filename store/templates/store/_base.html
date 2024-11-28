@@ -20,6 +20,16 @@
       rel="stylesheet" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="{% static 'store/css/styles.css' %}" rel="stylesheet" />
+    <style>
+      .card-img-top {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .card-img-top:hover {
+        transform: scale(1.1); /* Makes the image slightly larger */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Adds a shadow effect */
+      }
+    </style>
   </head>
   <body>
     <!-- Navigation-->
