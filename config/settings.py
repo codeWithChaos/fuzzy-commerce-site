@@ -53,7 +53,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # Context Processors
                 'store.context_processors.display_savage',
+                'cart.context_processors.cart',
             ],
         },
     },
