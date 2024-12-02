@@ -38,8 +38,22 @@
               style="top: 0.5rem; right: 0.5rem">
               Out of Stock!!!
             </div>
-            ${{ product.price }} {% endif %}
-
+            ${{ product.price }} 
+            {% endif %}
+            <div class="container my-2">
+              <div class="row justify-content-center">
+                <div class="col-md-2">Quantity:</div>
+                <div class="col-md-2">
+                  <select class="form-select form-select-sm" id="cart-quantity">
+                    <option value="1" selected>1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+                </div>
+              </div>
+            </div>
             <div class="my-3">
               <a
                 href="{% url 'home' %}"
@@ -76,6 +90,7 @@
       url: "{% url 'cart_add' %}",
       data: {
         product_id: $("#add-cart").val(),
+        product_quantity: $("#cart-quantity option:selected").text(),
         csrfmiddlewaretoken: "{{ csrf_token }}",
         action: "post",
       },

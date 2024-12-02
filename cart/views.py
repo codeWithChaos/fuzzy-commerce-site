@@ -2,15 +2,20 @@ from django.shortcuts import render, get_object_or_404
 from .cart import Cart
 from store.models import Product
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 
+@login_required(login_url='login')
 def cart_summary(request):
     # Get cart
     cart = Cart(request)
     cart_products = cart.get_products()
     
+    quantities = cart.get_quantities()
+    
     context = {
-        'cart_products': cart_products
+        'cart_products': cart_products,
+        'quantities': quantities
     }
     return render(request, 'cart/cart_summary.html', context)
 
@@ -22,12 +27,13 @@ def cart_add(request):
         
         # Get stuff
         product_id = int(request.POST.get('product_id'))
+        product_quantity = int(request.POST.get('product_quantity'))
         
         # Look up product in the database
         product = get_object_or_404(Product, id=product_id)
         
         # Save to session
-        cart.add(product=product)
+        cart.add(product=product, quantity=product_quantity)
         
         # Get cart quantity
         cart_quantity = cart.__len__()
