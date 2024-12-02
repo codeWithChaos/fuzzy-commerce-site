@@ -57,10 +57,12 @@
               <a
                 href="{% url 'home' %}"
                 class="btn btn-outline-secondary"
-                >Home</a
-              >&nbsp;
+                >Home</a>&nbsp;
               <button class="btn btn-outline-secondary update-cart" data-index="{{ product.id }}" type="button">
                 Update
+              </button>&nbsp;
+              <button class="btn btn-outline-danger delete-item" data-index="{{ product.id }}" type="button">
+                Remove
               </button>
             </div>
             <div class="row justify-content-center">
@@ -94,15 +96,18 @@
     </div>
     {% endfor %}
   {% else %}
+  <div class="container my-5">
     <div class="alert alert-danger mt-4" role="alert">
       <p>Aauch!!! Your cart <i class="bi bi-cart4"></i> looks empty. Visit the store to fill up your cart now..</p>
     </div>
+  </div>
   {% endif %}
   
 </div>
 
 
 <script>
+  // Update Cart
   $(document).on("click", ".update-cart", function (e) {
     e.preventDefault();
     // Grab the product id
@@ -114,6 +119,30 @@
       data: {
         product_id: $(this).data("index"),
         product_quantity: $('#select' + product_id + ' option:selected').text(),
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+        action: "post",
+      },
+      
+      success: function (json) {
+        // console.log(json);
+        // document.getElementById("cart_quantity").textContent = json.qty;
+        location.reload();
+      },
+      error: function (xhr, errmsg, err) {},
+    });
+  });
+
+  // Delete Item From Cart
+  $(document).on("click", ".delete-item", function (e) {
+    e.preventDefault();
+    // Grab the product id
+    // var product_id = $(this).data("index");
+
+    $.ajax({
+      type: "POST",
+      url: "{% url 'cart_delete' %}",
+      data: {
+        product_id: $(this).data("index"),
         csrfmiddlewaretoken: "{{ csrf_token }}",
         action: "post",
       },
