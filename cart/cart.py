@@ -66,3 +66,27 @@ class Cart():
             del self.cart[product_id]
             
         self.session.modified = True
+        
+    def cart_total(self):
+        """
+        Calculate the total price of all items in the cart.
+        """
+        product_ids = self.cart.keys()  # Retrieving the products IDs
+        products = Product.objects.filter(id__in=product_ids)  # Retrieving the products
+        quantities = self.get_quantities()  # Get quantities of each product in the cart
+
+        total_price = sum(
+            (product.sale_price if product.is_sale else product.price) * quantities.get(str(product.id), 0) for product in products
+        )
+
+        return total_price
+        
+        # total = 0
+        
+        # for key, value in quantities.items():
+        #     # key = int(key)
+            
+        #     for product in products:
+        #         if product.id == int(key):
+        #             total += product.price * value
+        # return total

@@ -9,13 +9,14 @@ from django.contrib.auth.decorators import login_required
 def cart_summary(request):
     # Get cart
     cart = Cart(request)
-    cart_products = cart.get_products()
-    
-    quantities = cart.get_quantities()
+    cart_products = cart.get_products()  # Retrieving the products in the cart
+    quantities = cart.get_quantities() # Get the quantities of each product
+    totals = cart.cart_total()
     
     context = {
         'cart_products': cart_products,
-        'quantities': quantities
+        'quantities': quantities,
+        'totals': totals
     }
     return render(request, 'cart/cart_summary.html', context)
 
