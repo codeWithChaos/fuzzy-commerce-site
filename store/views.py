@@ -83,3 +83,12 @@ def register(request):
             return redirect('register')
     else:
         return render(request, 'store/register.html', {'form': form})
+    
+def category_summary(request):
+    categories = Category.objects.all()
+    products = Product.objects.all()
+    context = {
+        'categories': categories,
+        'products': products,
+    }
+    return render(request, 'store/category_summary.html', context)

@@ -28,12 +28,40 @@
     <link href="{% static 'store/css/styles.css' %}" rel="stylesheet" />
     <style>
       .card-img-top {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
 
       .card-img-top:hover {
-        transform: scale(1.1); /* Makes the image slightly larger */
+        transform: scale(1.05); /* Makes the image slightly larger */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Adds a shadow effect */
+      }
+
+      .category-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        height: 350px;
+        text-decoration: none;
+      }
+      .category-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+      .category-card .card-image-top {
+        height: 200px;
+        object-fit: cover;
+      }
+      .category-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #007bff;
+      }
+      .gradient-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 50%;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
       }
     </style>
   </head>
