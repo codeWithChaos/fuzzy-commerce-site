@@ -3,6 +3,7 @@ from .cart import Cart
 from store.models import Product
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 @login_required(login_url='login')
@@ -42,6 +43,7 @@ def cart_add(request):
         # Retrun response
         # response = JsonResponse({'Product Name ': product.name})
         response = JsonResponse({'qty ': cart_quantity})
+        messages.success(request, 'Product addedd to cart!')
         return response
 
 def cart_delete(request):
@@ -53,6 +55,7 @@ def cart_delete(request):
         cart.delete(product=product_id)
         
         response = JsonResponse({'producty ': product_id})
+        messages.success(request, 'Product removed from cart!')
         return response
 
 
@@ -66,6 +69,7 @@ def cart_update(request):
         cart.update(product=product_id, quantity=product_quantity)
 
         response = JsonResponse({'qty ': product_quantity})
+        messages.success(request, 'Cart updated successfully')
         return response
 
 

@@ -4,6 +4,11 @@
 
 {% block content %}
 <div class="container my-5">
+  
+  {% for message in messages %}
+    {{ message }}
+  {% endfor %}
+    
   <div class="card mb-3 shadow-lg rounded-4">
     <div class="row g-0">
       <div class="col-md-4">
@@ -98,6 +103,7 @@
       success: function (json) {
         // console.log(json);
         document.getElementById("cart_quantity").textContent = json.qty;
+        location.reload();
       },
       error: function (xhr, errmsg, err) {},
     });
