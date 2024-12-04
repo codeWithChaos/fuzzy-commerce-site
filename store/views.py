@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .forms import SignUpForm
+from .forms import SignUpForm, UpdateUserForm
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 
@@ -83,6 +83,25 @@ def register(request):
             return redirect('register')
     else:
         return render(request, 'store/register.html', {'form': form})
+
+@login_required(login_url='/login/')
+def update_user(request):
+    if request.user.is_authenticated:
+        current_user = User.objects.get(id=request.user.id)
+        user_form = UpdateUserForm(request.POST or None, instance=current_user)
+        
+        if user_form.is_valid():
+            user_form.save()
+            
+            login(request, current_user)
+            messages.success(request, 'User has been updated')
+            return redirect('home')
+        return render(request, 'store/update_user.html', {'user_form': user_form})
+    else:
+        messages.error(request, 'You must b logged in to access that page.')
+        return redirect('home')
+        # return render(request, 'store/update_user.html', {'user_form': user_form})
+        
     
 def category_summary(request):
     categories = Category.objects.all()
