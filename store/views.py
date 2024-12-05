@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .forms import SignUpForm, UpdateUserForm
+from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 
@@ -98,10 +98,30 @@ def update_user(request):
             return redirect('home')
         return render(request, 'store/update_user.html', {'user_form': user_form})
     else:
-        messages.error(request, 'You must b logged in to access that page.')
+        messages.error(request, 'You must be logged in to access that page.')
         return redirect('home')
         # return render(request, 'store/update_user.html', {'user_form': user_form})
-        
+
+@login_required(login_url='/login/')
+def update_password(request):
+    if request.user.is_authenticated:
+        current_user = request.user
+        # Did they fill out the form?
+        if request.method == 'POST':
+            form = ChangePasswordForm(current_user, request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Your Password has been updated...')
+                return redirect('update-user')
+            else:
+                for error in list(form.errors.values()):
+                    messages.error(request, error)
+                    return redirect('update-password')
+        else:
+            form = ChangePasswordForm(current_user)
+    else:
+        messages.error(request, 'You must be logged in to view that page.')
+    return render(request, 'store/update_password.html', {'form': form})
     
 def category_summary(request):
     categories = Category.objects.all()
