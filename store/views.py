@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product, Category
+from .models import Product, Category, Profile
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm
+from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 
@@ -18,6 +18,22 @@ def home(request):
         'categories': categories,
     }
     return render(request, 'store/home.html', context)
+
+@login_required(login_url='/login/')
+def update_info(request):
+    if request.user.is_authenticated:
+        current_user = Profile.objects.get(user__id=request.user.id)
+        form = UserInfoForm(request.POST or None, instance=current_user)
+        
+        if form.is_valid():
+            form.save()
+            
+            messages.success(request, 'You have successfully registered! :)')
+            return redirect('home')
+        return render(request, 'store/update_info.html', {'form': form})
+    else:
+        messages.error(request, 'You must be logged in to access that page :(')
+        return render(request, 'store/update_info.html', {'form': form})
 
 def category(request, category_name):
     """
@@ -76,8 +92,8 @@ def register(request):
             # log in user
             user = authenticate(username=username, password=password)
             login(request, user)
-            messages.success(request, 'You have successfully registered!')
-            return redirect('home')
+            messages.success(request, 'Username Created - Please Fill Out Your User Info Below!')
+            return redirect('update-info')
         else:
             messages.error(request, 'An error occurred during registration.')
             return redirect('register')

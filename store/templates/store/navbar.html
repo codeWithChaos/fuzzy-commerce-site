@@ -51,8 +51,24 @@
         </li>
 
         {% if user.is_authenticated %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'update-user' %}">Profile</a>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            id="navbarDropdown"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            >Profile</a
+          >
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li>
+              <a class="dropdown-item" href="{% url 'update-user' %}">User Profile</a>
+            </li>
+            <li>
+              <a href="{% url 'update-info' %}" class="dropdown-item">User Info</a>
+            </li>
+          </ul>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'logout' %}">Logout</a>

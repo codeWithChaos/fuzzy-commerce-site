@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPasswordForm
 from django import forms
+from .models import Profile
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Email Address'}))
@@ -29,9 +30,9 @@ class SignUpForm(UserCreationForm):
 class UpdateUserForm(UserChangeForm):
     password = None  # Hide password stuff
     # Get other fields.
-    email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Email Address'}))
-    first_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}))
-    last_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}))
+    email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Email Address'}), required=False)
+    first_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}), required=False)
+    last_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}), required=False)
 
     class Meta:
         model = User
@@ -59,3 +60,17 @@ class ChangePasswordForm(SetPasswordForm):
         self.fields['new_password2'].widget.attrs['class'] = 'form-control'
         self.fields['new_password2'].widget.attrs['placeholder'] = 'Confirm Password'
         self.fields['new_password2'].label = ''
+
+
+class UserInfoForm(forms.ModelForm):
+    phone = forms.CharField(label='', max_length=20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone'}), required=False)
+    address1 = forms.CharField(label='', max_length=200, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address1'}), required=False)
+    address2 = forms.CharField(label='', max_length=200, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address2'}), required=False)
+    city = forms.CharField(label='', max_length=200, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City'}), required=False)
+    state = forms.CharField(label='', max_length=200, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'State/Region'}), required=False)
+    zipcode = forms.CharField(label='', max_length=200, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'ZipCode'}), required=False)
+    country = forms.CharField(label='', max_length=200, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Country'}), required=False)
+
+    class Meta:
+        model = Profile
+        fields = ('phone', 'address1', 'address2', 'city', 'state', 'zipcode', 'country')
