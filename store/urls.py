@@ -14,4 +14,5 @@ urlpatterns = [
     path('category_summary/', views.category_summary, name='category-summary'),
     path('update_password/', views.update_password, name='update-password'),
     path('update_info/', views.update_info, name='update-info'),
+    path('search/', views.search, name='search'),
 ]

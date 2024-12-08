@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
+from django.db.models import Q
 
 
 @login_required(login_url='/login/')
@@ -116,7 +117,6 @@ def update_user(request):
     else:
         messages.error(request, 'You must be logged in to access that page.')
         return redirect('home')
-        # return render(request, 'store/update_user.html', {'user_form': user_form})
 
 @login_required(login_url='/login/')
 def update_password(request):
@@ -147,3 +147,19 @@ def category_summary(request):
         'products': products,
     }
     return render(request, 'store/category_summary.html', context)
+
+def search(request):
+    # Determine if they fill out the form
+    if request.method == 'POST':
+        searched = request.POST.get('search')
+        # Query the Product model
+        searched_product = Product.objects.filter(
+            Q(name__icontains=searched) | Q(description__icontains=searched)
+        )
+        # Test for null
+        if not searched_product:
+            messages.error(request, 'That Product does not exist.')
+            return render(request, 'store/search.html', {})
+        else:
+            return render(request, 'store/search.html', {'searched': searched_product})
+    return render(request, 'store/search.html', {})
