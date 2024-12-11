@@ -8,9 +8,11 @@ from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.db.models import Q
+import json
+from cart.cart import Cart
 
 
-@login_required(login_url='/login/')
+# @login_required(login_url='/login/')
 def home(request):
     products = Product.objects.all()
     categories = Category.objects.all()
@@ -69,6 +71,21 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            
+            # Do some shopping cart stuff
+            current_user = Profile.objects.get(user__id=request.user.id)
+            # Get their saved cart from db
+            saved_cart = current_user.old_cart
+            # convert db string to python dictionary
+            if saved_cart:
+                # convert to dictionary using json
+                converted_cart = json.loads(saved_cart)
+                # Add the loaded cart dictionay to our session
+                cart = Cart(request)
+                # Loop through the cart and add the items from the db
+                for key, value in converted_cart.items():
+                    cart.db_cart(product=key, quantity=value)
+            
             messages.success(request, 'You have been logged in.')
             return redirect('home')
         else:
@@ -80,7 +97,7 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     messages.success(request, 'You have been logged out. Thanks for stopping by! 😊')
-    return redirect('login')
+    return redirect('home')
 
 def register(request):
     form = SignUpForm()
