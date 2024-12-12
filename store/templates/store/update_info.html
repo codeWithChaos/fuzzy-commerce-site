@@ -15,12 +15,17 @@
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-6 offset-md-3 mb-5">
+      <p class="fw-bold mb-2">Billing Information</p>
       <form
-        method="post"
-        action="{% url 'update-info' %}"
-        class="shadow p-3 mb-5 bg-body rounded">
-        {% csrf_token %}
-        {{ form.as_p }}
+      method="post"
+      action="{% url 'update-info' %}"
+      class="shadow p-3 mb-5 bg-body rounded">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <div class="mt-5">
+          <p class="fw-bold mb-3">Shipping Information</p>
+          {{ shipping_form.as_p }}
+        </div>
         <button type="submit" class="btn btn-outline-dark mt-3 mx-auto d-block">Update Profile</button>
       </form>
     </div>

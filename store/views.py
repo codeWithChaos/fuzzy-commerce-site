@@ -11,6 +11,9 @@ from django.db.models import Q
 import json
 from cart.cart import Cart
 
+from payment.forms import ShippingForm
+from payment.models import ShippingAddress
+
 
 # @login_required(login_url='/login/')
 def home(request):
@@ -22,21 +25,63 @@ def home(request):
     }
     return render(request, 'store/home.html', context)
 
-@login_required(login_url='/login/')
+"""@login_required(login_url='/login/')
 def update_info(request):
     if request.user.is_authenticated:
+        # Get current user
         current_user = Profile.objects.get(user__id=request.user.id)
+        # Get current user's shipping info
+        shipping_user = ShippingAddress.objects.get(id=request.user.id)
+        # Get original user form
         form = UserInfoForm(request.POST or None, instance=current_user)
+        # Get user's shipping form
+        shipping_form = ShippingForm(request.POST or None, instance=shipping_user)
         
         if form.is_valid():
             form.save()
             
             messages.success(request, 'You have successfully registered! :)')
             return redirect('home')
-        return render(request, 'store/update_info.html', {'form': form})
+        return render(request, 'store/update_info.html', {'form': form, 'shipping_form': shipping_form})
     else:
         messages.error(request, 'You must be logged in to access that page :(')
-        return render(request, 'store/update_info.html', {'form': form})
+        return render(request, 'store/update_info.html', {'form': form})"""
+
+@login_required(login_url='/login/')
+def update_info(request):
+    try:
+        # Get current user profile
+        current_user = Profile.objects.get(user__id=request.user.id)
+
+        # Get or create the current user's shipping address
+        shipping_user, created = ShippingAddress.objects.get_or_create(user__id=request.user.id)
+
+        # Forms for updating user profile and shipping info
+        form = UserInfoForm(request.POST or None, instance=current_user)
+        shipping_form = ShippingForm(request.POST or None, instance=shipping_user)
+
+        if request.method == 'POST':
+            if form.is_valid() and shipping_form.is_valid():
+                form.save()
+                shipping_form.save()
+
+                messages.success(request, 'Your information has beed successfully updated! :)')
+                return redirect('home')
+            else:
+                messages.error(request, 'Please correct the errors below.')
+
+        return render(request, 'store/update_info.html', {
+            'form': form,
+            'shipping_form': shipping_form
+        })
+
+    except Profile.DoesNotExist:
+        messages.error(request, 'Your profile does not exist. Please contact support.')
+        return redirect('home')
+
+    except Exception as e:
+        messages.error(request, f'An unexpected error occured: {str(e)}')
+        return redirect('home')
 
 def category(request, category_name):
     """
